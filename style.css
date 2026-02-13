@@ -1,0 +1,186 @@
+/* =========================================================
+   1. CORE VARIABLES (SAMSUNG ONE UI & WINDOWS 11 PALETTE)
+   ========================================================= */
+:root {
+    /* Light Mode */
+    --bg-color: #f2f2f7;
+    --bg-rgb: 242, 242, 247;
+    --card-bg: #ffffff;
+    --hover-bg: #f9f9fb;
+    --active-bg: #efeff4;
+    --selected-bg: #f9f9fb; /* NEW: Soft blue tint */
+
+    --text-main: #000000;
+    --text-muted: #8e8e93;
+    --divider: #e5e5ea;
+    --primary-blue: #007aff;
+
+    --border-radius: 26px;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    --transition-speed: 0.35s;
+}
+
+[data-theme="dark"] {
+    /* True OLED Dark Mode */
+    --bg-color: #000000;
+    --bg-rgb: 0, 0, 0;
+    --card-bg: #1c1c1e;
+    --hover-bg: #2c2c2e;
+    --active-bg: #3a3a3c;
+    --selected-bg: #2c2c2e; /* NEW: Deep soft blue tint */
+
+    --text-main: #ffffff;
+    --text-muted: #98989d;
+    --divider: #38383a;
+    --primary-blue: #0a84ff;
+
+    --card-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* =========================================================
+   2. GLOBAL RESET & BASE TYPOGRAPHY
+   ========================================================= */
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--bg-color);
+    color: var(--text-main); overflow: hidden; display: flex; justify-content: center; transition: background-color 0.4s ease;
+}
+
+/* =========================================================
+   3. THE AUTO-HIDING SCROLLBAR
+   ========================================================= */
+.custom-scrollbar { overflow-y: auto; overflow-x: hidden; }
+.custom-scrollbar::-webkit-scrollbar { width: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: transparent; border-radius: 10px; transition: background 0.3s; }
+.custom-scrollbar:hover::-webkit-scrollbar-thumb { background: rgba(142, 142, 147, 0.4); }
+.custom-scrollbar::-webkit-scrollbar-thumb:active { background: rgba(142, 142, 147, 0.8); }
+
+/* =========================================================
+   4. DUAL-PANE ARCHITECTURE
+   ========================================================= */
+.app-container { display: flex; width: 100%; max-width: 1300px; height: 100vh; }
+
+@media (min-width: 768px) {
+    .app-container { padding: 30px; gap: 30px; }
+    .sidebar { width: 380px; flex-shrink: 0; display: flex; flex-direction: column; height: 100%; }
+    .content-pane {
+        flex-grow: 1; background: var(--card-bg); border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow); overflow: hidden; position: relative; display: flex; flex-direction: column; border: 1px solid var(--divider);
+    }
+    .sidebar-content { flex-grow: 1; padding-bottom: 30px; }
+    .mobile-back-btn { display: none !important; }
+    .pane-screen .info-block, .pane-screen .accordion-item { background: var(--bg-color); box-shadow: none; border: 1px solid var(--divider); }
+    .pane-screen .accordion-content { background: var(--bg-color); }
+}
+
+@media (max-width: 767px) {
+    .app-container { flex-direction: column; }
+    .sidebar { width: 100%; height: 100vh; overflow-y: auto; padding-bottom: 40px; }
+    .sidebar-content { padding: 0 20px; }
+    .content-pane {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: var(--bg-color);
+        z-index: 200; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .content-pane.mobile-open { transform: translateX(0); }
+    .pane-content { padding: 0 20px 40px; }
+    .mobile-back-btn {
+        display: flex; align-items: center; justify-content: center; background: none; border: none; font-size: 2.2rem;
+        font-weight: 300; color: var(--primary-blue); margin-right: 15px; cursor: pointer; padding-bottom: 4px;
+    }
+}
+
+/* =========================================================
+   5. SIDEBAR HEADER
+   ========================================================= */
+.sidebar-header { position: sticky; top: 0; z-index: 100; padding: 20px 20px 10px; background: var(--bg-color); transition: all 0.3s ease; }
+.top-bar { height: 35px; display: flex; align-items: center; margin-bottom: 5px; }
+.scrolled-title { font-size: 1.3rem; font-weight: 700; opacity: 0; transform: translateY(10px); transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.large-title { font-size: 2.6rem; font-weight: 800; letter-spacing: -1px; padding-bottom: 10px; transform-origin: left top; transition: all 0.3s ease; }
+.sidebar-header.is-scrolled { background: rgba(var(--bg-rgb), 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-bottom: 1px solid rgba(142, 142, 147, 0.1); }
+.sidebar-header.is-scrolled .scrolled-title { opacity: 1; transform: translateY(0); }
+.sidebar-header.is-scrolled .large-title { opacity: 0; transform: scale(0.8) translateY(-20px); pointer-events: none; height: 0; padding-bottom: 0; }
+
+/* =========================================================
+   6. PANE SCREENS & HEADERS
+   ========================================================= */
+.pane-screen { display: none; height: 100%; flex-direction: column; }
+.pane-screen.active { display: flex; animation: fadeUpIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+@keyframes fadeUpIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+.flex-center { justify-content: center; align-items: center; }
+.pane-header {
+    display: flex; align-items: center; padding: 30px; background: rgba(var(--bg-rgb), 0.85); backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 20; border-bottom: 1px solid var(--divider);
+}
+@media (min-width: 768px) { .pane-header { background: rgba(var(--card-bg), 0.9); } }
+.pane-header h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+.pane-content { padding: 30px; flex-grow: 1; max-width: 800px; margin: 0 auto; width: 100%; }
+
+/* NEW: Group titles for the consolidated Books menu */
+.group-title {
+    font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--text-muted); margin-bottom: 12px; margin-left: 10px; font-weight: 700;
+}
+
+/* =========================================================
+   7. INTERACTIVE CARDS & MENU LISTS
+   ========================================================= */
+.settings-group { background: var(--card-bg); border-radius: var(--border-radius); margin-bottom: 24px; box-shadow: var(--card-shadow); overflow: hidden; }
+
+/* NEW: Beautiful Active State Highlighting */
+.nav-item.active-nav { background: var(--selected-bg) !important; }
+.nav-item.active-nav .setting-text { color: var(--primary-blue); }
+
+.profile-card { display: flex; align-items: center; padding: 20px; background: var(--card-bg); border-radius: var(--border-radius); margin-bottom: 25px; box-shadow: var(--card-shadow); cursor: pointer; transition: background 0.2s, transform 0.2s; }
+.avatar { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; margin-right: 15px; border: 2px solid var(--divider); }
+.profile-info h2 { font-size: 1.1rem; font-weight: 700; }
+.profile-info p { font-size: 0.85rem; margin-top: 2px; }
+.samsung-account { font-size: 0.8rem; color: var(--primary-blue); font-weight: 600; display: block; margin-top: 5px; }
+
+.setting-item { display: flex; align-items: center; padding: 16px 20px; text-decoration: none; color: var(--text-main); cursor: pointer; border-bottom: 1px solid var(--divider); transition: background 0.2s; }
+.setting-item:last-child { border-bottom: none; }
+.icon-box { width: 32px; height: 32px; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: white; font-size: 1.1rem; margin-right: 16px; flex-shrink: 0; }
+.setting-text-block { flex-grow: 1; }
+.setting-text { font-weight: 600; font-size: 1.05rem; letter-spacing: -0.3px; transition: color 0.2s; }
+.setting-subtext { font-size: 0.85rem; color: var(--text-muted); margin-top: 2px; }
+.chevron { color: var(--text-muted); font-size: 1.5rem; transition: transform 0.3s; }
+
+.interactive-item:hover, .interactive-card:hover { background: var(--hover-bg); }
+.interactive-item:active, .interactive-card:active { background: var(--active-bg); transform: scale(0.98); }
+.interactive-text:hover { opacity: 0.6; }
+
+/* =========================================================
+   8. RIGHT PANE BLOCKS & ACCORDIONS
+   ========================================================= */
+.info-block { background: var(--card-bg); border-radius: var(--border-radius); padding: 24px; margin-bottom: 20px; box-shadow: var(--card-shadow); }
+.info-block h3 { font-size: 1.05rem; color: var(--primary-blue); margin-bottom: 6px; font-weight: 600; }
+.info-block p { font-size: 0.95rem; line-height: 1.6; }
+
+.accordion-item { background: var(--card-bg); border-radius: var(--border-radius); margin-bottom: 16px; box-shadow: var(--card-shadow); overflow: hidden; }
+.accordion-header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; background: none; border: none; color: var(--text-main); cursor: pointer; text-align: left; transition: background 0.2s; }
+.accordion-content { max-height: 0; overflow: hidden; background: var(--card-bg); transition: max-height 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.accordion-header.active .chevron { transform: rotate(90deg); color: var(--primary-blue); }
+
+.clean-list { list-style: none; padding: 0 24px 20px; }
+.clean-list li { padding: 14px 0; border-bottom: 1px solid var(--divider); font-size: 0.95rem; line-height: 1.5; font-weight: 500; }
+.clean-list li:last-child { border-bottom: none; padding-bottom: 0; }
+.project-block { margin: 0 20px 20px; border: 1px solid var(--divider); box-shadow: none; padding: 16px;}
+.project-block h3 { font-size: 1.1rem; color: var(--text-main); margin-bottom: 4px; }
+.project-block p { font-size: 0.9rem; color: var(--text-muted); }
+
+/* =========================================================
+   9. SAMSUNG DIGITAL CLOCK & WELCOME STATE
+   ========================================================= */
+.floating-clock { position: absolute; top: 38%; left: 50%; transform: translate(-50%, -50%); text-align: center; transition: all 0.7s cubic-bezier(0.25, 1, 0.3, 1); z-index: 100; pointer-events: none; }
+.clock-time { font-size: 6rem; font-weight: 300; letter-spacing: -3px; color: var(--text-main); line-height: 1; }
+.clock-date { font-size: 1.1rem; color: var(--primary-blue); font-weight: 600; margin-top: 8px; }
+
+.content-pane.has-selection .floating-clock { top: 30px; left: auto; right: 30px; transform: translate(0, 0) scale(0.28); transform-origin: top right; opacity: 0.4; }
+@media (max-width: 767px) { .content-pane.has-selection .floating-clock { opacity: 0; } }
+
+.welcome-text { text-align: center; margin-top: 240px; max-width: 420px; opacity: 1; transition: opacity 0.4s ease; padding: 0 20px; }
+.welcome-text h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; color: var(--text-main); }
+.welcome-text p { color: var(--text-muted); line-height: 1.6; margin-bottom: 30px; font-size: 1.05rem; }
+
+.email-btn { display: inline-block; padding: 12px 28px; background: rgba(var(--bg-rgb), 0.5); border: 1px solid var(--divider); border-radius: 30px; color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.2s ease; }
+.email-btn:hover { background: var(--divider); }
