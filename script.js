@@ -146,9 +146,17 @@ function updateClockAndGreeting() {
     let minutes = now.getMinutes();
 
     // 2. Calculate Greeting based on the hour
-    let greeting = 'Good evening,';
-    if (hours >= 5 && hours < 12) greeting = 'Good morning,';
-    else if (hours >= 12 && hours < 18) greeting = 'Good afternoon,';
+    let greeting;
+    if (hours >= 5 && hours < 12) {
+        greeting = 'Good morning,';
+    } else if (hours >= 12 && hours < 18) {
+        greeting = 'Good afternoon,';
+    } else if (hours >= 18 && hours <= 23) {
+        greeting = 'Good evening,';
+    } else {
+        // This catches 12:00 AM to 4:59 AM
+        greeting = 'Up late coding,'; 
+    }
 
     // 3. Format the numbers (12-hour clock)
     hours = hours % 12;
